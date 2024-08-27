@@ -11,10 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,6 +39,20 @@ public class PedidosController {
         }
 
         return ResponseEntity.ok(criarPedidoUseCase.execute(input));
+    }
+
+    @GetMapping
+    @Operation(summary = "Listar todas os pedidos paginadas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode =  "200", description = "Listado com sucesso."),
+            @ApiResponse(responseCode =  "500", description = "Um erro interno foi lançado.")
+    })
+    ResponseEntity<?> listarCategorias(
+            @RequestParam(name = "numero_pedido", required = false, defaultValue = "") final String search,
+            @RequestParam(name = "data_cadastro", required = false, defaultValue = "0") final int page,
+            @RequestParam(name = "codigo_cliente", required = false, defaultValue = "10") final int perPage,
+    ) {
+        return null;
     }
 
 

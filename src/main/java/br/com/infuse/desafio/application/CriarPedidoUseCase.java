@@ -9,15 +9,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class CriarPedidoUseCase {
 
+    private final Set<Integer> CODIGOS_CLIENTES_VALIDOS = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+
     private PedidoGateway pedidoGateway;
 
     public List<CriarPedidoResponse> execute(final List<CriarPedidoRequest> command) {
-        validarNumerosControle(command);
+        validarPayloadRequest(command);
 
         final var pedidos = command.stream().map(Pedido::newPedido).toList();
 
@@ -25,6 +29,11 @@ public class CriarPedidoUseCase {
 
         return pedidosCriados.stream().map(CriarPedidoResponse::from).toList();
 
+    }
+
+    private void validarPayloadRequest(List<CriarPedidoRequest> command) {
+        validarNumerosControle(command);
+        validarCodigoCliente(command);
     }
 
     private void validarNumerosControle(final List<CriarPedidoRequest> command) {
@@ -39,6 +48,22 @@ public class CriarPedidoUseCase {
             throw new DomainException("ERROR, Os seguintes números de controle já estão cadastrados: " + numerosControleExistentes);
         }
 
+    }
+
+
+    private void validarCodigoCliente(final List<CriarPedidoRequest> command) {
+       final var codigosClientesInvalidos = obterClientesInvalidos(command);
+
+        if (!codigosClientesInvalidos.isEmpty()) {
+            throw new DomainException("Os seguintes códigos de cliente são inválidos: " + codigosClientesInvalidos);
+        }
+    }
+
+    private List<Integer> obterClientesInvalidos(List<CriarPedidoRequest> command) {
+        return command.stream()
+                .map(CriarPedidoRequest::getCodigoCliente)
+                .filter(codigoCliente -> !CODIGOS_CLIENTES_VALIDOS.contains(codigoCliente))
+                .toList();
     }
 
     private List<Long> obterNumerosControle(final List<CriarPedidoRequest> command) {
