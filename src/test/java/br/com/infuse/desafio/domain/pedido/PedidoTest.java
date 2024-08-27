@@ -1,6 +1,5 @@
-package br.com.infuse.desafio.pedido;
+package br.com.infuse.desafio.domain.pedido;
 
-import br.com.infuse.desafio.domain.pedido.Pedido;
 import org.junit.jupiter.api.Test;
 
 
