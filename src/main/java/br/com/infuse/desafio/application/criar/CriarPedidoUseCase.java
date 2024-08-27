@@ -1,4 +1,4 @@
-package br.com.infuse.desafio.application;
+package br.com.infuse.desafio.application.criar;
 
 import br.com.infuse.desafio.domain.exceptions.DomainException;
 import br.com.infuse.desafio.domain.pedido.Pedido;

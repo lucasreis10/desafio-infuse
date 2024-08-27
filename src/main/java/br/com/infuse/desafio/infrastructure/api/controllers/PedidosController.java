@@ -1,8 +1,11 @@
 package br.com.infuse.desafio.infrastructure.api.controllers;
 
-import br.com.infuse.desafio.application.CriarPedidoUseCase;
+import br.com.infuse.desafio.application.criar.CriarPedidoUseCase;
+import br.com.infuse.desafio.application.recuperar.ListarPedidosUseCase;
+import br.com.infuse.desafio.application.recuperar.SearchQuery;
 import br.com.infuse.desafio.domain.exceptions.DomainException;
 import br.com.infuse.desafio.infrastructure.pedido.models.CriarPedidoRequest;
+import br.com.infuse.desafio.infrastructure.pedido.models.ListarPedidoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,7 @@ import java.util.List;
 public class PedidosController {
 
     private CriarPedidoUseCase criarPedidoUseCase;
+    private ListarPedidosUseCase listarPedidosUseCase;
 
     @PostMapping(
         consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
@@ -47,12 +52,20 @@ public class PedidosController {
             @ApiResponse(responseCode =  "200", description = "Listado com sucesso."),
             @ApiResponse(responseCode =  "500", description = "Um erro interno foi lançado.")
     })
-    ResponseEntity<?> listarCategorias(
-            @RequestParam(name = "numero_pedido", required = false, defaultValue = "") final String search,
-            @RequestParam(name = "data_cadastro", required = false, defaultValue = "0") final int page,
-            @RequestParam(name = "codigo_cliente", required = false, defaultValue = "10") final int perPage,
+    List<ListarPedidoResponse> listarCategorias(
+            @RequestParam(name = "numero_controle", required = false, defaultValue = "") final Long numeroControle,
+            @RequestParam(name = "data_cadastro", required = false, defaultValue = "") final LocalDate dataCadastro,
+            @RequestParam(name = "nome", required = false, defaultValue = "") final String nome,
+            @RequestParam(name = "codigo_cliente", required = false, defaultValue = "") final Long codigoCliente
     ) {
-        return null;
+        final var serachQuery = SearchQuery.builder()
+                .numeroControle(numeroControle)
+                .dataCadastro(dataCadastro)
+                .nome(nome)
+                .codigoCliente(codigoCliente)
+                .build();
+
+        return listarPedidosUseCase.execute(serachQuery);
     }
 
 
