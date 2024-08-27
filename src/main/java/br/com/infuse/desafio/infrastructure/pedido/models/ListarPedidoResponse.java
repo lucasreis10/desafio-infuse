@@ -21,7 +21,7 @@ public class ListarPedidoResponse {
     @JsonProperty("quantidade")
     private Integer quantidade;
     @JsonProperty("codigo_cliente")
-    private Long codigoCliente;
+    private Integer codigoCliente;
     @JsonProperty("nome")
     private String nome;
 

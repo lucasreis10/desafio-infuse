@@ -3,13 +3,11 @@ package br.com.infuse.desafio.domain.pedido;
 
 import br.com.infuse.desafio.infrastructure.pedido.models.CriarPedidoRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
@@ -25,7 +23,7 @@ public class Pedido {
     private String nome;
     private BigDecimal valor;
     private Integer quantidade;
-    private Long codigoCliente;
+    private Integer codigoCliente;
     private BigDecimal valorTotal;
 
 
@@ -35,7 +33,7 @@ public class Pedido {
         final String nome,
         final BigDecimal valor,
         final Integer quantidade,
-        final Long codigoCliente
+        final Integer codigoCliente
     ) {
         this.numeroControle = numeroControle;
         this.dataCadastro = ofNullable(dataCadastro).orElse(LocalDate.now());
@@ -53,7 +51,7 @@ public class Pedido {
                 command.getNome(),
                 command.getValor(),
                 command.getQuantidade(),
-                command.getNumeroControle()
+                command.getCodigoCliente()
         );
     }
 
@@ -61,9 +59,9 @@ public class Pedido {
         BigDecimal total = valor.multiply(BigDecimal.valueOf(quantidade));
 
         if (quantidade >= 10) {
-            total = total.multiply(BigDecimal.valueOf(0.90));
+            total = total.multiply(BigDecimal.valueOf(0.90)).setScale(2);
         } else if (quantidade >= 5) {
-            total = total.multiply(BigDecimal.valueOf(0.95));
+            total = total.multiply(BigDecimal.valueOf(0.95)).setScale(2);
         }
 
         return total;
